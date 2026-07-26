@@ -15,7 +15,6 @@ const Bubble = ({ id, top, left, onExit, onClick }) => {
     const topPositionRef = useRef(top);
     const poppedRef = useRef(false); // guards against double-firing (manual pop + auto-pop racing)
     const autoPopDelayMs = 3000;
-
     const bubbleSizeStart = 4;
     const bubbleSizeEnd = 8;
     const size = useRef(Math.random() * (bubbleSizeEnd - bubbleSizeStart) + bubbleSizeStart);
