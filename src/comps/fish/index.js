@@ -4,6 +4,19 @@ import './index.css';
 import { useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react';
 import Image from 'next/image';
 
+import FishCap from '../../assets/hats/fish_cap.webp';
+import FishHelmet from '../../assets/hats/fish_helmet.webp';
+import FishSunglasses from '../../assets/hats/fish_sunglasses.webp';
+import FishTophat from '../../assets/hats/fish_tophat.webp';
+
+import TropicalFishCap from '../../assets/hats/tropical_fish_cap.webp';
+import TropicalFishHelmet from '../../assets/hats/tropical_fish_helmet.webp';
+import TropicalFishSunglasses from '../../assets/hats/tropical_fish_sunglasses.webp';
+import TropicalFishTophat from '../../assets/hats/tropical_fish_tophat.webp';
+
+const regFishHats = [FishCap, FishHelmet, FishSunglasses, FishTophat];
+const tropicalFishHats = [TropicalFishCap, TropicalFishHelmet, TropicalFishSunglasses, TropicalFishTophat];
+
 const minSize = 10;
 const maxSize = 20;
 const maxDegree = 40;
@@ -37,6 +50,8 @@ const Fish = forwardRef((props, tankRef) => {
     const CurrentSizeRef = useRef(null);
 
     const [starred, setStarred] = useState(false);
+    const [hasHat, setHasHat] = useState(false);
+    const [hatIndex, setHatIndex] = useState(null);
 
     const position = useRef({
 
@@ -61,7 +76,19 @@ const Fish = forwardRef((props, tankRef) => {
 
         let nextSize = (CurrentSizeRef.current ?? minSize) + growthIncrement;
 
-        if (nextSize > maxSize) nextSize = minSize;
+        if (nextSize > maxSize) {
+
+            nextSize = minSize;
+            
+            // Apply random hat to fish:
+            const nextHatIndex = hatIndex === null
+                ? Math.floor(Math.random() * regFishHats.length)
+                : (hatIndex + 1) % regFishHats.length;
+
+            setHatIndex(nextHatIndex);
+            setHasHat(true);
+
+        }
 
         CurrentSizeRef.current = nextSize;
         FishElement.current.style.height = `${nextSize}%`;
@@ -256,12 +283,24 @@ const Fish = forwardRef((props, tankRef) => {
 
         <div className="fish" ref={FishElement} onClick={handleFishClick}>
             <div className={`fish-rotator${starred ? " starred" : ""}`} ref={FishRotator}>
+
                 <div ref={FishMouth} className="fish-mouth"></div>
-                <Image width={1} style={{width: 'auto'}} alt="Fish" draggable={false} className="fish-img" src={props.type === "tropical" ? TropicalFishSprite : FishSprite}/>
-                <div
-                    className={`fish-star-overlay${starred ? " active" : ""}`}
-                    style={{ '--star-mask-src': `url(${(props.type === "tropical" ? TropicalFishSprite : FishSprite).src})` }}
-                />
+
+                <div className="fish-body-wrapper">
+
+                    {hasHat && hatIndex !== null && (
+                        <Image width={1} style={{ width: 'auto' }} alt="Fish Hat" draggable={false} className="fish-hat" src={props.type === "tropical" ? tropicalFishHats[hatIndex] : regFishHats[hatIndex]} />
+                    )}
+
+                    <Image width={1} style={{ width: 'auto' }} alt="Fish" draggable={false} className="fish-img" src={props.type === "tropical" ? TropicalFishSprite : FishSprite} />
+
+                    <div
+                        className={`fish-star-overlay${starred ? " active" : ""}`}
+                        style={{ '--star-mask-src': `url(${(props.type === "tropical" ? TropicalFishSprite : FishSprite).src})` }}
+                    />
+
+                </div>
+
             </div>
         </div>
 

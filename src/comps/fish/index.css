@@ -92,13 +92,25 @@
     pointer-events: all;
 }
 
+.fish-body-wrapper {
+  position: relative;
+  transition: transform .5s ease-out;
+  animation:
+    swimming 1s infinite ease-in-out,
+    flapping 1.25s infinite ease-in-out;
+  transform-origin: center center;
+  height: 100%;
+}
+
 .fish-img {
     height: 100%;
-    transition: transform .5s ease-out;
-    animation: 
-      swimming 1s infinite ease-in-out,
-      flapping 1.25s infinite ease-in-out;
-    transform-origin: center center;
+}
+
+.fish-hat {
+  position: absolute;
+  user-select: none;
+  z-index: 1;
+  height: 100%;
 }
 
 .fish-rotator {
@@ -106,7 +118,7 @@
     transition: transform 1s ease;
 }
 
-.fish-rotator.starred .fish-img {
+.fish-rotator.starred .fish-body-wrapper {
   transition: transform .5s linear !important;
 }
 
